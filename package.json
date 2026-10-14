@@ -7,7 +7,6 @@
     "node": ">=24"
   },
   "scripts": {
-    "prepare": "husky",
     "common:build": "pnpm --filter common run build",
     "express": "pnpm run common:build && pnpm --filter express-server run dev",
     "next": "pnpm run common:build && pnpm --filter next-client run dev",
@@ -16,15 +15,8 @@
     "prettier": "prettier \"{apps,packages}/**/*.{json,html,css,sass,scss}\" --write --ignore-unknown"
   },
   "devDependencies": {
-    "husky": "^9.1.7",
-    "lint-staged": "^17.6.0",
     "prettier": "^3.9.10",
     "turbo": "^2.11.8"
-  },
-  "lint-staged": {
-    "*.{json,html,css,sass,scss}": [
-      "prettier --write --ignore-unknown"
-    ]
   },
   "packageManager": "pnpm@11.20.0",
   "license": "ISC"

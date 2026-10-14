@@ -45,3 +45,6 @@ next-env.d.ts
 
 # graft's local graph cache — regenerable, not committed (run `graft build`).
 graft
+
+# prisma generated client (run `pnpm --filter express-server exec prisma generate`)
+apps/express-server/src/generated
