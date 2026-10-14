@@ -1,0 +1,25 @@
+services:
+  express-server:
+    image: docker_username/express-server
+    build:
+      context: .
+      dockerfile: ./apps/express-server/Dockerfile
+    ports:
+      - '8000:8000'
+
+  # somehow port mapping not working for this
+  nestjs-server:
+    image: docker_username/nestjs-server
+    build:
+      context: .
+      dockerfile: ./apps/nestjs-server/Dockerfile
+    ports:
+      - '4000:4000'
+
+  next-client:
+    image: docker_username/next-client
+    build:
+      context: .
+      dockerfile: ./apps/next-client/Dockerfile
+    ports:
+      - '3000:3000'

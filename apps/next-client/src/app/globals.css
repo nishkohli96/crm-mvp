@@ -1,0 +1,32 @@
+@import 'tailwindcss';
+
+/* @custom-variant dark is needed because Tailwind’s dark: classes
+do not automatically know about MUI’s theme switch.
+MUI sets data-mui-color-scheme="dark" on :root, so this line tells
+Tailwind: “treat that selector as dark mode.” */
+@custom-variant dark (&:where([data-mui-color-scheme="dark"], [data-mui-color-scheme="dark"] *));
+
+/* MUI is the color source of truth in src/theme/palette.ts.
+These Tailwind aliases intentionally reference MUI generated CSS variables
+so utility classes can use theme colors without duplicating hex values. */
+@theme inline {
+  --color-primary: var(--mui-palette-primary-main);
+  --color-secondary: var(--mui-palette-secondary-main);
+  --color-success: var(--mui-palette-success-main);
+  --color-warning: var(--mui-palette-warning-main);
+  --color-error: var(--mui-palette-error-main);
+  --color-info: var(--mui-palette-info-main);
+  --color-divider: var(--mui-palette-divider);
+  --color-background: var(--mui-palette-background-default);
+  --color-background-paper: var(--mui-palette-background-paper);
+  --color-text-primary: var(--mui-palette-text-primary);
+  --color-text-secondary: var(--mui-palette-text-secondary);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--mui-palette-background-default);
+  color: var(--mui-palette-text-primary);
+  font-family: Arial, Helvetica, sans-serif;
+}

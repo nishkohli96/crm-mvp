@@ -1,0 +1,43 @@
+name: build-apps
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [24.14.0]
+        os: [ubuntu-latest]
+
+    steps:
+      - name: Git Checkout
+        uses: actions/checkout@v7
+
+      - name: Configure pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          run_install: false
+
+      - name: Setup Node env
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      # express-server and next-client load the built dist/ of common.
+      - name: Build common
+        run: pnpm --filter common build
+
+      - name: Build express-server
+        run: pnpm --filter express-server build
+
+      - name: Build nestjs-server
+        run: pnpm --filter nestjs-server build
+
+      - name: Build next-client
+        run: pnpm --filter next-client build

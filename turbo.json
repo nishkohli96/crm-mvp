@@ -1,0 +1,33 @@
+{
+  "$schema": "https://turborepo.dev/schema.json",
+  "tasks": {
+    "lint": {
+      "dependsOn": []
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true,
+      "dependsOn": ["^build"]
+    },
+    "build": {
+      "dependsOn": ["^build"],
+      "cache": false
+    },
+    "prod": {
+      "dependsOn": []
+    },
+    "test": {
+      "dependsOn": ["build"],
+      "outputs": [],
+      "inputs": ["src/**/*.tsx", "src/**/*.ts", "test/**/*.ts", "test/**/*.tsx"]
+    },
+    "//#prettier": {
+      "dependsOn": [],
+      "outputs": []
+    },
+    "deploy": {
+      "dependsOn": ["build", "test", "prettier"],
+      "outputs": []
+    }
+  }
+}
