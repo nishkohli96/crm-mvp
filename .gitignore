@@ -47,4 +47,4 @@ next-env.d.ts
 graft
 
 # prisma generated client (run `pnpm --filter express-server exec prisma generate`)
-apps/express-server/src/generated
+generated

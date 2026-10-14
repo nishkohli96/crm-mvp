@@ -1,0 +1,39 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider            = "prisma-client"
+  output              = "../src/generated"
+}
+
+model Employee {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  claimedEnquiries Enquiry[]
+
+  @@map("employees")
+}
+
+/// No public/private flag: `claimedBy IS NULL` means public, set means private to that employee.
+model Enquiry {
+  id             String   @id @default(uuid())
+  name           String
+  email          String
+  phone          String?
+  message        String?
+  courseInterest String   @map("course_interest")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  claimedBy         String?   @map("claimed_by")
+  claimedAt         DateTime? @map("claimed_at")
+  claimedByEmployee Employee? @relation(fields: [claimedBy], references: [id])
+
+  @@index([claimedBy])
+  @@map("enquiries")
+}
