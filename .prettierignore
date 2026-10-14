@@ -7,9 +7,9 @@ dist
 .vercel
 
 # config-files
-nest-cli.json
 package.json
-package-lock.json
+pnpm-workspace.yaml
+pnpm-lock.yaml
 test/jest-e2e.json
 tsconfig.json
 tsconfig.build.json

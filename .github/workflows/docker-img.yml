@@ -25,9 +25,6 @@ jobs:
       - name: Build express-server Image
         run: docker build -f ./apps/express-server/Dockerfile -t ${{secrets.DOCKER_HUB_USERNAME}}/express-server:${{ steps.date.outputs.date }} .
 
-      - name: Build nestjs-server Image
-        run: docker build -f ./apps/nestjs-server/Dockerfile -t ${{secrets.DOCKER_HUB_USERNAME}}/nestjs-server:${{ steps.date.outputs.date }} .
-
       - name: Build next-client Image
         run: docker build -f ./apps/next-client/Dockerfile -t ${{ secrets.DOCKER_HUB_USERNAME }}/next-client:${{ steps.date.outputs.date }} .
 
@@ -39,9 +36,6 @@ jobs:
 
       - name: Push express-server Image to Docker Hub
         run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/express-server:${{ steps.date.outputs.date }}
-
-      - name: Push nestjs-server Image to Docker Hub
-        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/nestjs-server:${{ steps.date.outputs.date }}
 
       - name: Push next-client Image to Docker Hub
         run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/next-client:${{ steps.date.outputs.date }}

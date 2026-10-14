@@ -36,8 +36,5 @@ jobs:
       - name: Build express-server
         run: pnpm --filter express-server build
 
-      - name: Build nestjs-server
-        run: pnpm --filter nestjs-server build
-
       - name: Build next-client
         run: pnpm --filter next-client build
