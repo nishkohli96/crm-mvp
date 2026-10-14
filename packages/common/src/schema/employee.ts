@@ -8,20 +8,31 @@ const email = z
   .max(254, 'is too long')
   .pipe(z.email('must be a valid email'));
 
+const password = z
+  .string({ error: 'is required' })
+  .min(8, 'must be at least 8 characters')
+  .max(25, 'must be at most 25 characters');
+
 export const registerSchema = z.object({
-  name: z.string({ error: 'is required' }).trim().min(1, 'is required').max(100, 'is too long'),
-  email,
-  /* bcrypt only uses the first 72 bytes */
-  password: z
+  firstName: z
     .string({ error: 'is required' })
-    .min(8, 'must be at least 8 characters')
-    .max(72, 'must be at most 72 characters')
+    .trim()
+    .min(2, 'must be at least 2 characters')
+    .max(100, 'is too long'),
+  lastName: z
+    .string({ error: 'is required' })
+    .trim()
+    .min(1, 'is required')
+    .max(100, 'is too long'),
+  email,
+  password
 });
 
 export const loginSchema = z.object({
   email,
-  password: z.string({ error: 'is required' }).min(1, 'is required')
+  password
 });
 
 export type RegisterBody = z.output<typeof registerSchema>;
+
 export type LoginBody = z.output<typeof loginSchema>;

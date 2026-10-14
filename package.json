@@ -1,5 +1,5 @@
 {
-  "name": "@nish1896/crm-mvp",
+  "name": "crm-mvp",
   "author": "Nishant Kohli",
   "version": "1.0.0",
   "private": true,
@@ -7,9 +7,9 @@
     "node": ">=24"
   },
   "scripts": {
-    "common:build": "pnpm --filter common run build",
-    "express": "pnpm run common:build && pnpm --filter express-server run dev",
-    "next": "pnpm run common:build && pnpm --filter next-client run dev",
+    "common": "pnpm --filter common run build",
+    "express": "pnpm run common && pnpm --filter express-server run dev",
+    "next": "pnpm run common && pnpm --filter next-client run dev",
     "build": "turbo run build",
     "lint": "turbo run lint",
     "prettier": "prettier \"{apps,packages}/**/*.{json,html,css,sass,scss}\" --write --ignore-unknown"

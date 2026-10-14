@@ -33,7 +33,7 @@ async function call(method: string, path: string, { token, body }: { token?: str
 async function register(tag: string) {
   const email = `${tag}-${run}@test.io`;
   const { status, json } = await call('POST', '/api/employees/register', {
-    body: { name: `Test ${tag}`, email, password }
+    body: { firstName: 'Test', lastName: `${tag}-${run}`, email, password }
   });
   assert.equal(status, 201);
   return { email, id: json.data.employee.id as string, token: json.data.token as string };
@@ -55,12 +55,17 @@ describe('crm api', () => {
   it('registers (no password in response), rejects duplicates and bad input', async () => {
     const a = await register('dup');
     const again = await call('POST', '/api/employees/register', {
-      body: { name: 'x', email: a.email.toUpperCase(), password }
+      body: { firstName: 'Other', lastName: 'Person', email: a.email.toUpperCase(), password }
     });
     assert.equal(again.status, 409);
     const bad = await call('POST', '/api/employees/register', { body: { email: 'nope', password: '1' } });
     assert.equal(bad.status, 400);
-    assert.match(bad.json.error ?? '', /name: is required.*email: must be a valid email.*password/);
+    assert.match(bad.json.error ?? '', /firstName: is required.*lastName: is required.*email: must be a valid email.*password/);
+    /* same first + last name, different email: allowed */
+    const sameName = await call('POST', '/api/employees/register', {
+      body: { firstName: 'Test', lastName: `dup-${run}`, email: `twin-${run}@test.io`, password }
+    });
+    assert.equal(sameName.status, 201);
     const raw = await call('POST', '/api/employees/login', { body: { email: a.email, password } });
     assert.equal(raw.status, 200);
     assert.equal('password' in raw.json.data.employee, false);

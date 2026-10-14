@@ -1,7 +1,12 @@
 import { Router } from 'express';
+import { createEnquirySchema } from 'common';
 import { authenticate, getUserId } from '@/middleware';
-import { getPaginationMeta, paginationSchema, parse, sendSuccessResponse } from '@/utils';
-import { createEnquirySchema } from './schema';
+import {
+  getPaginationMeta,
+  paginationSchema,
+  parse,
+  sendSuccessResponse
+} from '@/utils';
 import enquiryService from './service';
 
 const enquiryRouter = Router();

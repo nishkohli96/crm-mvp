@@ -1,7 +1,7 @@
 import { prisma } from '@/db';
+import type { CreateEnquiryBody } from 'common';
 import { Prisma } from '@/generated/client';
 import { HttpError, type Pagination } from '@/utils';
-import type { CreateEnquiryBody } from './schema';
 
 class EnquiryService {
   create(data: CreateEnquiryBody) {

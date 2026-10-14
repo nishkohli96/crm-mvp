@@ -1,16 +1,26 @@
 import bcrypt from 'bcryptjs';
+import type { LoginBody, RegisterBody } from 'common';
 import { prisma } from '@/db';
 import { Prisma } from '@/generated/client';
 import { HttpError, signToken } from '@/utils';
-import type { LoginBody, RegisterBody } from './schema';
 
 const BCRYPT_ROUNDS = 10;
 
 class EmployeeService {
-  async register({ name, email, password }: RegisterBody) {
+  async register({
+    firstName,
+    lastName,
+    email,
+    password
+  }: RegisterBody) {
     try {
       const employee = await prisma.employee.create({
-        data: { name, email, password: await bcrypt.hash(password, BCRYPT_ROUNDS) }
+        data: {
+          firstName,
+          lastName,
+          email,
+          password: await bcrypt.hash(password, BCRYPT_ROUNDS)
+        }
       });
       return { employee, token: signToken(employee.id) };
     } catch (error) {

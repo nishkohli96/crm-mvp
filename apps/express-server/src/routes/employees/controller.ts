@@ -1,6 +1,6 @@
 import { Router } from 'express';
+import { loginSchema, registerSchema } from 'common';
 import { parse, sendSuccessResponse } from '@/utils';
-import { loginSchema, registerSchema } from './schema';
 import employeeService from './service';
 
 const employeeRouter = Router();

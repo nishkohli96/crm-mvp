@@ -1,6 +1,7 @@
 model Employee {
   id        String   @id @default(uuid())
-  name      String
+  firstName String   @map("first_name")
+  lastName  String   @map("last_name")
   email     String   @unique
   password  String
   createdAt DateTime @default(now()) @map("created_at")
@@ -8,5 +9,10 @@ model Employee {
 
   claimedEnquiries Enquiry[]
 
+  // Defines a compound unique constraint for the specified fields.
+  // All fields that make up the unique constraint must be mandatory fields.
+  // @@unique([firstName, lastName])
+
+  // The table name in the database is "employees" instead of "Employee"
   @@map("employees")
 }

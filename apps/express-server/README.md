@@ -29,6 +29,7 @@ The server refuses to start when `DATABASE_URL` or `JWT_SECRET` is missing, or w
 - [v7 ORM Overview](https://www.prisma.io/docs/orm/v7)
 - [Add prisma to your app](https://www.prisma.io/docs/v7/prisma-orm/add-to-existing-project/postgresql)
 - [Define your schema](https://www.prisma.io/docs/orm/v7#1-define-your-schema)
+- [Data Models](https://www.prisma.io/docs/orm/v7/prisma-schema/data-model/models)
 
 ### Scripts
 
@@ -77,7 +78,7 @@ BASE=http://localhost:8000/api
 
 # register, then login (both return a token)
 curl -s -X POST $BASE/employees/register -H 'Content-Type: application/json' \
-  -d '{"name":"Asha Rao","email":"asha@example.com","password":"password123"}'
+  -d '{"firstName":"Asha","lastName":"Rao","email":"asha@example.com","password":"password123"}'
 TOKEN=$(curl -s -X POST $BASE/employees/login -H 'Content-Type: application/json' \
   -d '{"email":"asha@example.com","password":"password123"}' | jq -r .data.token)
 
@@ -124,6 +125,7 @@ test/              end-to-end API test
 - A counselor cannot unclaim a lead.
 - A counselor submits a form on behalf of a client through the same public endpoint. A token sent to it is ignored, the source is not recorded.
 - Any logged-in counselor sees all unclaimed leads.
+- Only the email is unique, two employees may share a first and last name.
 - Emails are trimmed and lowercased before they are stored or compared. Ids are UUIDs.
 - Tokens are HS256 JWTs with the employee id as `sub`. There is no refresh token or logout, a token is valid until it expires.
 - Curl examples are given instead of a Postman collection.
