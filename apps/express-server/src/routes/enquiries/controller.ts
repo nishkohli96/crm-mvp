@@ -7,43 +7,63 @@ import {
   parse,
   sendSuccessResponse
 } from '@/utils';
+import { type ClaimEnquiryRequest } from './types';
 import enquiryService from './service';
 
 const enquiryRouter = Router();
 
-/* Public enquiry form, no token needed */
-enquiryRouter.post('/public', async function createEnquiry(req, res) {
-  const body = parse(createEnquirySchema, req.body);
-  const data = await enquiryService.create(body);
-  sendSuccessResponse(res, { statusCode: 201, message: 'Enquiry submitted', data });
-});
+/* POST /public - Public enquiry form, no token needed */
+enquiryRouter.post(
+  '/public',
+  async function createEnquiry(req, res) {
+    const body = parse(createEnquirySchema, req.body);
+    const data = await enquiryService.create(body);
+    sendSuccessResponse(res, {
+      statusCode: 201,
+      message: 'Enquiry submitted',
+      data
+    });
+  }
+);
 
-/* Unclaimed leads */
-enquiryRouter.get('/public', authenticate, async function listPublicEnquiries(req, res) {
-  const pagination = parse(paginationSchema, req.query);
-  const { items, total } = await enquiryService.listPublic(pagination);
-  sendSuccessResponse(res, {
-    message: 'Public enquiries',
-    data: items,
-    meta: getPaginationMeta(pagination, total)
-  });
-});
+/* GET /public - List public enquiries */
+enquiryRouter.get(
+  '/public',
+  authenticate,
+  async function listPublicEnquiries(req, res) {
+    const pagination = parse(paginationSchema, req.query);
+    const { items, total } = await enquiryService.listPublic(pagination);
+    sendSuccessResponse(res, {
+      message: 'Public enquiries',
+      data: items,
+      meta: getPaginationMeta(pagination, total)
+    });
+  }
+);
 
-/* Leads claimed by the logged-in employee, taken from the JWT only */
-enquiryRouter.get('/private', authenticate, async function listPrivateEnquiries(req, res) {
-  const pagination = parse(paginationSchema, req.query);
-  const { items, total } = await enquiryService.listPrivate(getUserId(req), pagination);
-  sendSuccessResponse(res, {
-    message: 'Your enquiries',
-    data: items,
-    meta: getPaginationMeta(pagination, total)
-  });
-});
+/* GET /private - Leads claimed by the logged-in employee, taken from the JWT only */
+enquiryRouter.get(
+  '/private',
+  authenticate,
+  async function listPrivateEnquiries(req, res) {
+    const pagination = parse(paginationSchema, req.query);
+    const { items, total } = await enquiryService.listPrivate(getUserId(req), pagination);
+    sendSuccessResponse(res, {
+      message: 'Your enquiries',
+      data: items,
+      meta: getPaginationMeta(pagination, total)
+    });
+  }
+);
 
-/* Assign a lead to the logged-in employee */
-enquiryRouter.patch<{ id: string }>('/:id/claim', authenticate, async function claimEnquiry(req, res) {
-  const data = await enquiryService.claim(req.params.id, getUserId(req));
-  sendSuccessResponse(res, { message: 'Enquiry claimed', data });
-});
+/* PATCH /claim/:id - Assign a lead to the logged-in employee */
+enquiryRouter.patch(
+  '/claim/:id',
+  authenticate,
+  async function claimEnquiry(req: ClaimEnquiryRequest, res) {
+    const data = await enquiryService.claim(req.params.id, getUserId(req));
+    sendSuccessResponse(res, { message: 'Enquiry claimed', data });
+  }
+);
 
 export { enquiryRouter };

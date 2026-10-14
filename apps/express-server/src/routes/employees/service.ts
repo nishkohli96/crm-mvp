@@ -24,8 +24,15 @@ class EmployeeService {
       });
       return { employee, token: signToken(employee.id) };
     } catch (error) {
-      /* The unique index on email is the source of truth, so no check-then-insert race */
-      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+      /**
+       * P2002 is Prisma’s error code for “unique constraint failed”.
+       * It’s thrown when a create or update would put a duplicate value
+       * into a column that must be unique (@unique, @@unique or @id).
+       */
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError
+        && error.code === 'P2002'
+      ) {
         throw new HttpError(409, 'Email is already registered');
       }
       throw error;
@@ -37,7 +44,7 @@ class EmployeeService {
       where: { email },
       omit: { password: false }
     });
-    /* Same message for an unknown email and a wrong password */
+
     const invalid = new HttpError(401, 'Invalid email or password');
     if (!found) {
       throw invalid;
