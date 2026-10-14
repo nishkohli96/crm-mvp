@@ -1,5 +1,4 @@
 import type { Request, Response, NextFunction } from 'express';
-/* Not the '@/utils' barrel, it imports '@/middleware' back */
 import { HttpError } from '@/utils/errors';
 import { verifyToken } from '@/utils/jwt';
 

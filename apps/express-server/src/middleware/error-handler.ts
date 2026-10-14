@@ -2,11 +2,6 @@ import { STATUS_CODES } from 'node:http';
 import type { Request, Response, NextFunction } from 'express';
 import { winstonLogger } from './winston-logger';
 
-/**
- * body-parser and other http-errors carry the status to respond
- * with, eg. 400 for a malformed JSON body. Anything else is an
- * unexpected error.
- */
 function getStatusCode(error: unknown) {
   const status = (error as { status?: unknown } | null)?.status;
   return typeof status === 'number' && status >= 400 && status < 600

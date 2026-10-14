@@ -15,7 +15,6 @@ export function sendErrorResponse(
     statusCode = 500,
   }: ErrorResponseOptions
 ) {
-  /* JSON.stringify would wrap a plain string in an extra pair of quotes */
   let errorMessage = String(error);
   if (error instanceof Error) {
     errorMessage = error.message;
