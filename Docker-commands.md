@@ -5,7 +5,6 @@ Every image is built from the **monorepo root**, as its Dockerfile copies the ro
 | App              | Dockerfile                          | Container port | Port in `compose.yml` |
 | ---------------- | ----------------------------------- | -------------- | --------------------- |
 | `express-server` | `./apps/express-server/Dockerfile`  | 8000           | 8000                  |
-| `nestjs-server`  | `./apps/nestjs-server/Dockerfile`   | 4000           | 4000                  |
 | `next-client`    | `./apps/next-client/Dockerfile`     | 3000           | 3000                  |
 
 1. Build an image, eg. `next-client`

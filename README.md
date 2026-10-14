@@ -1,18 +1,4 @@
-# react-node-ts-monorepo
-
-**The ideal repository for full-stack web development with NextJS as the frontend and ExpressJS, NestJS-fastify server as the backend.**
-
-You can clone the full repo and keep only the packages you need in your monorepo. I'll try my level best to keep all the dependencies in these repos upto date, while also adhering to the industry best practices.  
-
-## Features
-
-- [Turborepo](https://turborepo.org/)
-- [Next.js](https://nextjs.org/), [ExpressJS](https://expressjs.com/), [NestJS](https://nestjs.com/)
-- 100% [Typescript](https://www.typescriptlang.org/)
-- [Prettier](https://prettier.io/) and [Eslint](https://eslint.org/) setup alongside `pre-commit` hook.
-- [Mui v9](https://mui.com/) alongside theme change preconfigured.
-- [Dockerize](https://docs.docker.com/) images
-- Github Actions to build apps and publish their docker images
+# CRM MVP
 
 ## Get Started
 
@@ -37,7 +23,6 @@ Start an app in dev mode (`express` and `next` build `common` first),
 ```bash
 pnpm next      # next-client
 pnpm express   # express-server
-pnpm nest      # nestjs-server
 ```
 
 Run a command in a specific workspace,

@@ -13,13 +13,7 @@
     "lint:check": "eslint"
   },
   "dependencies": {
-    "@emotion/cache": "^11.14.0",
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.1",
-    "@mui/icons-material": "^9.5.0",
-    "@mui/material": "^9.5.0",
-    "@mui/material-nextjs": "^9.5.0",
-    "@nish1896/mui-components": "^2.3.1",
+    "@base-ui/react": "^1.9.0",
     "common": "workspace:*",
     "next": "16.4.0",
     "react": "^19.3.0",
