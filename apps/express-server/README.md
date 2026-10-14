@@ -8,7 +8,7 @@ Run these from the repo root (the workspace is managed with pnpm, see the root R
 
 ```bash
 pnpm install
-cp apps/express-server/.env_sample apps/express-server/.env   # then fill it in, see below
+
 pnpm --filter express-server db:deploy                       # create the tables
 pnpm --filter express-server db:seed                         # optional: load prisma/sample-enquiries.json
 pnpm express                                                 # http://localhost:8000
@@ -25,6 +25,10 @@ You need a PostgreSQL database, point `DATABASE_URL` at it.
 
 The server refuses to start when `DATABASE_URL` or `JWT_SECRET` is missing, or when the database is unreachable.
 
+### Prisma
+- [Add prisma to your app](https://www.prisma.io/docs/v7/prisma-orm/add-to-existing-project/postgresql)
+- [Define your schema](https://www.prisma.io/docs/orm/v7#1-define-your-schema)
+
 ### Scripts
 
 Run with `pnpm --filter express-server <script>`.
@@ -33,7 +37,7 @@ Run with `pnpm --filter express-server <script>`.
 | --- | --- |
 | `dev` | Generate the Prisma client, then run with nodemon |
 | `build` / `start:node` | Compile to `dist/`, run the build |
-| `db:migrate` | After editing `prisma/schema.prisma`: create and apply a migration |
+| `db:migrate` | After editing the schema in `prisma/schema/`: create and apply a migration |
 | `db:deploy` | Apply the existing migrations (first setup, CI, production) |
 | `db:seed` | Insert `prisma/sample-enquiries.json` as public enquiries (skipped if the table already has rows) |
 | `db:studio` | Browse the data in Prisma Studio |
@@ -103,7 +107,7 @@ curl -s $BASE/enquiries/private -H "Authorization: Bearer $TOKEN"
 ## Project structure
 
 ```
-prisma/            schema.prisma, migrations/, seed.ts, sample-enquiries.json
+prisma/            schema/ (base.prisma + one file per model), migrations/, seed.ts, sample-enquiries.json
 src/
   routes/          one folder per resource: controller (router), service (Prisma queries), schema (zod)
   middleware/      auth (JWT), error-handler, request-logger

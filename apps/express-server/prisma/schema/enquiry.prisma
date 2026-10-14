@@ -1,28 +1,3 @@
-datasource db {
-  provider = "postgresql"
-}
-
-generator client {
-  provider            = "prisma-client"
-  output              = "../src/generated"
-  moduleFormat        = "cjs"
-  /// bare imports, ts-node (pnpm dev) can't resolve the default "./x.js" to "./x.ts"
-  importFileExtension = ""
-}
-
-model Employee {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  claimedEnquiries Enquiry[]
-
-  @@map("employees")
-}
-
 /// No public/private flag: `claimedBy IS NULL` means public, set means private to that employee.
 model Enquiry {
   id             String   @id @default(uuid())

@@ -73,4 +73,7 @@ pnpm install --frozen-lockfile
 
 pnpm --filter "$PKG_NAME" run build
 
+cp apps/express-server/.env_sample apps/express-server/.env 
+cp apps/next-client/.env_sample apps/next-client/.env 
+
 echo "✅ Setup Complete! 🎉🎉🎉"

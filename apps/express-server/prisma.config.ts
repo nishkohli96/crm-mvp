@@ -3,7 +3,8 @@ import 'dotenv/config';
 import { defineConfig } from 'prisma/config';
 
 export default defineConfig({
-  schema: 'prisma/schema.prisma',
+  /* A folder: every .prisma file in it is part of the schema */
+  schema: 'prisma/schema',
   migrations: {
     path: 'prisma/migrations',
     seed: 'node -r ts-node/register -r tsconfig-paths/register prisma/seed.ts'
