@@ -5,7 +5,7 @@ datasource db {
 generator client {
   provider            = "prisma-client"
   output              = "../../src/generated"
-  moduleFormat        = "cjs"
-  /// bare imports, ts-node (pnpm dev) can't resolve the default "./x.js" to "./x.ts"
-  importFileExtension = ""
+  moduleFormat        = "esm"
+  generatedFileExtension = "ts"
+  importFileExtension = "ts"
 }

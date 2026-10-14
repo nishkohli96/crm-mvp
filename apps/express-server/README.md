@@ -26,6 +26,7 @@ You need a PostgreSQL database, point `DATABASE_URL` at it.
 The server refuses to start when `DATABASE_URL` or `JWT_SECRET` is missing, or when the database is unreachable.
 
 ### Prisma
+- [v7 ORM Overview](https://www.prisma.io/docs/orm/v7)
 - [Add prisma to your app](https://www.prisma.io/docs/v7/prisma-orm/add-to-existing-project/postgresql)
 - [Define your schema](https://www.prisma.io/docs/orm/v7#1-define-your-schema)
 

@@ -1,4 +1,5 @@
 /// <reference types="node" />
+
 import 'dotenv/config';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
