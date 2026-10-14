@@ -2,6 +2,8 @@ import jwt, { type SignOptions } from 'jsonwebtoken';
 import { ENV_VARS } from '@/constants';
 import { HttpError } from './errors';
 
+const jwtAlgorithm = 'HS256';
+
 const { jwtSecret: secret, jwtExpiresIn } = ENV_VARS;
 
 if (!secret) {
@@ -13,7 +15,7 @@ const jwtSecret = secret;
 
 export function signToken(employeeId: string) {
   return jwt.sign({}, jwtSecret, {
-    algorithm: 'HS256',
+    algorithm: jwtAlgorithm,
     subject: employeeId,
     expiresIn: jwtExpiresIn as SignOptions['expiresIn']
   });
@@ -22,7 +24,7 @@ export function signToken(employeeId: string) {
 /* Returns the employee id the token was issued for. */
 export function verifyToken(token: string) {
   try {
-    const payload = jwt.verify(token, jwtSecret, { algorithms: ['HS256'] });
+    const payload = jwt.verify(token, jwtSecret, { algorithms: [jwtAlgorithm] });
     if (typeof payload !== 'string' && payload.sub) {
       return payload.sub;
     }

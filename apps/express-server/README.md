@@ -138,4 +138,4 @@ test/              end-to-end API test
 
 3.  The `pm2-runtime` is designed specifically for Docker environments, keeping the process in the foreground and ensuring the container remains active.
 
-4.  If you enable the `watch` flag in `ecosystem.config.js`, make sure to also add `ignore_watch: ['logs']` in the config file as this will prevent PM2 from watching the logs directory, thereby avoiding restarts triggered by log file updates.
+4.  If you enable the `watch` flag in `ecosystem.config.cjs`, make sure to also add `ignore_watch: ['logs']` in the config file as this will prevent PM2 from watching the logs directory, thereby avoiding restarts triggered by log file updates.

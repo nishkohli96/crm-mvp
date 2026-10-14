@@ -10,8 +10,8 @@ model Enquiry {
   updatedAt      DateTime @updatedAt @map("updated_at")
 
   /// EmployeeId of the employee who claimed this enquiry, or NULL if unclaimed (public)
-  claimedBy      String?   @map("claimed_by")
-  claimedAt      DateTime? @map("claimed_at")
+  claimedBy String?   @map("claimed_by")
+  claimedAt DateTime? @map("claimed_at")
 
   // Tells Prisma that claimedBy is a foreign key to Employee.id, and
   // lets you work with the whole Employee object

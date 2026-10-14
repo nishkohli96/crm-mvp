@@ -5,7 +5,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { z } from 'zod';
 import { prisma } from '@/db';
-import { createEnquirySchema } from '@/routes/enquiries/schema';
+import { createEnquirySchema } from 'common';
 
 /**
  * Loads sample-enquiries.json as public (unclaimed) enquiries. Skipped
@@ -16,7 +16,12 @@ async function seed() {
     console.log('enquiries table is not empty, skipping seed');
     return;
   }
-  const raw: unknown = JSON.parse(readFileSync(join(__dirname, 'sample-enquiries.json'), 'utf8'));
+  const raw: unknown = JSON.parse(
+    readFileSync(
+      join(import.meta.dirname, 'sample-enquiries.json'),
+      'utf8'
+    )
+  );
   /* Same schema as the public form, so the samples stay valid */
   const data = z.array(createEnquirySchema).parse(raw);
   const { count } = await prisma.enquiry.createMany({ data });

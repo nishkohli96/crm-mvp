@@ -48,7 +48,7 @@ COPY --from=builder /app/packages/common/dist packages/common/dist
 WORKDIR /app/apps/express-server
 
 COPY --from=builder /app/apps/express-server/dist ./dist
-COPY apps/express-server/ecosystem.config.js ./
+COPY apps/express-server/ecosystem.config.cjs ./
 
 # winston writes to ./logs, which the non-root user must be able to create
 RUN mkdir logs && chown node:node logs
@@ -59,4 +59,4 @@ EXPOSE 8000
 
 # pm2-runtime keeps pm2 in the foreground (see README.md) and forwards
 # SIGTERM to the app.
-CMD ["node_modules/.bin/pm2-runtime", "start", "ecosystem.config.js"]
+CMD ["node_modules/.bin/pm2-runtime", "start", "ecosystem.config.cjs"]

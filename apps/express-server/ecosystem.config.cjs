@@ -17,7 +17,7 @@ module.exports = {
        * SIGKILL (default 1600ms)
        */
       kill_timeout: 6000,
-			env_file: '.env',
+      env_file: '.env',
       env: {
         NODE_ENV: 'production',
       },

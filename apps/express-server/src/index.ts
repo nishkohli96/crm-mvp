@@ -1,19 +1,3 @@
-/**
- * In dev env ts-node will be using tsconfig-paths to
- * resolve alias imports.
- *
- * However when generating the build and running it,
- * tsc-alias will replace the alias imports with the
- * actual import path relative to each file.
- *
- * Sadly "node -r tsconfig-paths/register dist/index.js" is
- * not resolving the paths when running the build.
- *
- * "node -r ts-node/register/transpile-only -r tsconfig-paths/register dist/main.js"
- * works but not recommended to be used in production because
- * of the lack of type safety.
- */
-
 import 'dotenv/config';
 import os from 'os';
 import { createServer } from 'node:http';
@@ -30,10 +14,6 @@ const { port, env } = ENV_VARS;
 const SHUTDOWN_TIMEOUT_MS = 5000;
 
 async function bootstrap() {
-  /**
-   * Fail fast if the database is unreachable, instead of on the first
-   * request. $connect() is a no-op with a driver adapter, so run a query.
-   */
   await prisma.$queryRaw`SELECT 1`;
 
   const server = createServer(app);
