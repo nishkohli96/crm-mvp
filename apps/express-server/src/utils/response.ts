@@ -31,3 +31,24 @@ export function sendErrorResponse(
     error: errorMessage,
   });
 }
+
+type SuccessResponseOptions = {
+  data: unknown;
+  message?: string;
+  statusCode?: number;
+  /* eg. pagination details of a list */
+  meta?: unknown;
+};
+
+export function sendSuccessResponse(
+  res: Response,
+  { data, message = 'Success', statusCode = 200, meta }: SuccessResponseOptions
+) {
+  return res.status(statusCode).json({
+    success: true,
+    status: statusCode,
+    message,
+    data,
+    meta
+  });
+}

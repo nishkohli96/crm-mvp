@@ -1,25 +1,13 @@
-/**
- * Move this in types/request folder if you want to
- * use this code snippet.
- */
-type PaginationConfig = {
-  recordsPerPage: number;
-  page: number;
-};
+import { z } from 'zod';
 
-export const defaultPagination: PaginationConfig = {
-  recordsPerPage: 10,
-  page: 1
-};
+/* ?page=1&limit=10 */
+export const paginationSchema = z.object({
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(100).default(10)
+});
 
-export function getPaginationParams(
-  page?: string,
-  recordsPerPage?: string
-): PaginationConfig {
-  return {
-    recordsPerPage: recordsPerPage
-      ? Number(recordsPerPage)
-      : defaultPagination.recordsPerPage,
-    page: page ? Number(page) : defaultPagination.page
-  };
+export type Pagination = z.output<typeof paginationSchema>;
+
+export function getPaginationMeta({ page, limit }: Pagination, total: number) {
+  return { page, limit, total, totalPages: Math.ceil(total / limit) };
 }

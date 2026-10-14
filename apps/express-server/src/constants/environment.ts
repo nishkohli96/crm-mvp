@@ -10,5 +10,8 @@ export const ENV_VARS = Object.freeze({
   env: env.NODE_ENV || 'development',
   /* Not `Number(..) || 8000`, that would turn PORT=0 (ephemeral port) into 8000 */
   port: env.PORT ? Number(env.PORT) : 8000,
-  databaseUrl: env.DATABASE_URL
+  databaseUrl: env.DATABASE_URL,
+  jwtSecret: env.JWT_SECRET,
+  /* eg. 15m, 12h, 7d */
+  jwtExpiresIn: env.JWT_EXPIRES_IN || '1d'
 });

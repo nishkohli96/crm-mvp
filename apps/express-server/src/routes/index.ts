@@ -1,5 +1,6 @@
 import { type Router } from 'express';
-import { authRouter } from './auth/controller';
+import { employeeRouter } from './employees/controller';
+import { enquiryRouter } from './enquiries/controller';
 
 type RouteInfo = {
   path: string;
@@ -12,8 +13,12 @@ function generatePrefix(routeName: string) {
 
 const routesList: RouteInfo[] = [
   {
-    path: generatePrefix('/auth'),
-    router: authRouter
+    path: generatePrefix('/employees'),
+    router: employeeRouter
+  },
+  {
+    path: generatePrefix('/enquiries'),
+    router: enquiryRouter
   }
 ];
 
