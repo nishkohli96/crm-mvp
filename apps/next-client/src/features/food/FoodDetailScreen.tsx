@@ -13,7 +13,7 @@ import { getFoodItem } from '@/lib/api/endpoints';
 import type { FoodItem } from '@/lib/api/types';
 import { addToCart } from '@/lib/cart';
 import { formatPrice } from '@/lib/format';
-import { useApiData } from '@/lib/hooks';
+import useApiData from '@/hooks/useApiData';
 import { useRequireSession } from '@/lib/session';
 
 function FoodDetails({ item }: { item: FoodItem }) {
