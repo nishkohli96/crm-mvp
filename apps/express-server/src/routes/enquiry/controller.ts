@@ -12,9 +12,9 @@ import enquiryService from './service';
 
 const enquiryRouter = Router();
 
-/* POST /public - Public enquiry form, no token needed */
+/* POST /create - Create a new enquiry */
 enquiryRouter.post(
-  '/public',
+  '/create',
   async function createEnquiry(req, res) {
     const body = parse(createEnquirySchema, req.body);
     const data = await enquiryService.create(body);
@@ -26,30 +26,15 @@ enquiryRouter.post(
   }
 );
 
-/* GET /public - List public enquiries */
+/* GET /list - List public enquiries */
 enquiryRouter.get(
-  '/public',
+  '/list',
   authenticate,
   async function listPublicEnquiries(req, res) {
     const pagination = parse(paginationSchema, req.query);
-    const { items, total } = await enquiryService.listPublic(pagination);
+    const { items, total } = await enquiryService.listOpenEnquiries(pagination);
     sendSuccessResponse(res, {
       message: 'Public enquiries',
-      data: items,
-      meta: getPaginationMeta(pagination, total)
-    });
-  }
-);
-
-/* GET /private - Leads claimed by the logged-in employee, taken from the JWT only */
-enquiryRouter.get(
-  '/private',
-  authenticate,
-  async function listPrivateEnquiries(req, res) {
-    const pagination = parse(paginationSchema, req.query);
-    const { items, total } = await enquiryService.listPrivate(getUserId(req), pagination);
-    sendSuccessResponse(res, {
-      message: 'Your enquiries',
       data: items,
       meta: getPaginationMeta(pagination, total)
     });

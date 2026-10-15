@@ -11,7 +11,7 @@ import app from '@/app';
 import { prisma } from '@/db';
 
 const run = Date.now().toString(36);
-const password = 'password123';
+const password = 'Password@123';
 let baseUrl = '';
 let server: ReturnType<typeof app.listen>;
 

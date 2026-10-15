@@ -1,6 +1,12 @@
 import { Router } from 'express';
 import { loginSchema, registerSchema } from 'common';
-import { parse, sendSuccessResponse } from '@/utils';
+import { authenticate, getUserId } from '@/middleware';
+import {
+  parse,
+  getPaginationMeta,
+  paginationSchema,
+  sendSuccessResponse
+} from '@/utils';
 import employeeService from './service';
 import type * as EmployeeTypes from './types';
 
@@ -29,6 +35,21 @@ employeeRouter.post(
     sendSuccessResponse(res, {
       message: 'Login successful',
       data
+    });
+  }
+);
+
+/* GET /claimed-enquiries - Leads claimed by the logged-in employee */
+employeeRouter.get(
+  '/claimed-enquiries',
+  authenticate,
+  async function listPrivateEnquiries(req, res) {
+    const pagination = parse(paginationSchema, req.query);
+    const { items, total } = await employeeService.listClaimedEnquiries(getUserId(req), pagination);
+    sendSuccessResponse(res, {
+      message: 'Your enquiries',
+      data: items,
+      meta: getPaginationMeta(pagination, total)
     });
   }
 );

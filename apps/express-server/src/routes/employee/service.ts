@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 import type { LoginBody, RegisterBody } from 'common';
 import { prisma } from '@/db';
 import { Prisma } from '@/generated/client';
-import { HttpError, signToken } from '@/utils';
+import { HttpError, signToken, type Pagination } from '@/utils';
 
 const BCRYPT_ROUNDS = 10;
 
@@ -59,6 +59,22 @@ class EmployeeService {
       throw invalid;
     }
     return { employee, token: signToken(employee.id) };
+  }
+
+  async listClaimedEnquiries(employeeId: string, pagination: Pagination) {
+    const where = { claimedBy: employeeId };
+    const { page, limit } = pagination;
+
+    const [items, total] = await Promise.all([
+      prisma.enquiry.findMany({
+        where,
+        orderBy: [{ claimedAt: 'desc' }, { id: 'asc' }],
+        skip: (page - 1) * limit,
+        take: limit
+      }),
+      prisma.enquiry.count({ where })
+    ]);
+    return { items, total };
   }
 }
 

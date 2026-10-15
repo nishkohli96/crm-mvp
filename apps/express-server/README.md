@@ -131,7 +131,7 @@ If the migration then fails on a database, run `pnpm --filter express-server exe
 
 | File | Creates | Re-running |
 | --- | --- | --- |
-| `sample-employees.json` | Two counselors, `asha.rao@example.com` and `vikram.nair@example.com`, both with the password `password123` | Employees whose email already exists are skipped |
+| `sample-employees.json` | Two counselors, `asha.rao@example.com` and `vikram.nair@example.com`, both with the password `Password@123` | Employees whose email already exists are skipped |
 | `sample-enquiries.json` | 12 public (unclaimed) enquiries | Skipped when the `enquiries` table already has rows |
 
 The sample employees can log in right away via `POST /api/employees/login`. Their password is for local testing only, so the seed does not create them when `NODE_ENV=production`. Both files are validated with the same schemas the API uses.
@@ -169,9 +169,9 @@ BASE=http://localhost:8000/api
 
 # register, then login (both return a token)
 curl -s -X POST $BASE/employees/register -H 'Content-Type: application/json' \
-  -d '{"firstName":"Asha","lastName":"Rao","email":"asha@example.com","password":"password123"}'
+  -d '{"firstName":"Asha","lastName":"Rao","email":"asha@example.com","password":"Password@123"}'
 TOKEN=$(curl -s -X POST $BASE/employees/login -H 'Content-Type: application/json' \
-  -d '{"email":"asha@example.com","password":"password123"}' | jq -r .data.token)
+  -d '{"email":"asha@example.com","password":"Password@123"}' | jq -r .data.token)
 
 # submit the public form (no token)
 curl -s -X POST $BASE/enquiries/public -H 'Content-Type: application/json' \

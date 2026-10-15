@@ -13,6 +13,10 @@ function getStatusCode(error: unknown) {
  * Express recognises an error handler by its 4 arguments, so `next`
  * must stay even though it is only used once headers are sent.
  * Must be registered after all routes.
+ *
+ * Express 5 forwards anything thrown in a handler, sync or async,
+ * to the error middleware. No try/catch or next(err) is needed in
+ * the routes.
  */
 export function errorHandler(
   error: unknown,

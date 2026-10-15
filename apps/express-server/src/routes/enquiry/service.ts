@@ -8,13 +8,30 @@ class EnquiryService {
     return prisma.enquiry.create({ data });
   }
 
-  /* Public = nobody has claimed it yet */
-  listPublic(pagination: Pagination) {
-    return this.list({ claimedBy: null }, pagination, { createdAt: 'desc' });
+  private async listEnquiries(
+    where: Prisma.EnquiryWhereInput,
+    { page, limit }: Pagination,
+    orderBy: Prisma.EnquiryOrderByWithRelationInput
+  ) {
+    const [items, total] = await Promise.all([
+      prisma.enquiry.findMany({
+        where,
+        /* id as a tie-breaker, rows created together share a timestamp */
+        orderBy: [orderBy, { id: 'asc' }],
+        skip: (page - 1) * limit,
+        take: limit
+      }),
+      prisma.enquiry.count({ where })
+    ]);
+    return { items, total };
   }
 
-  listPrivate(employeeId: string, pagination: Pagination) {
-    return this.list({ claimedBy: employeeId }, pagination, { claimedAt: 'desc' });
+  listOpenEnquiries(pagination: Pagination) {
+    return this.listEnquiries(
+      { claimedBy: null },
+      pagination,
+      { createdAt: 'desc' }
+    );
   }
 
   /**
@@ -31,8 +48,8 @@ class EnquiryService {
     } catch (error) {
       /* P2025: nothing matched. Either there is no such lead or it was already claimed */
       if (
-        error instanceof Prisma.PrismaClientKnownRequestError &&
-        error.code === 'P2025'
+        error instanceof Prisma.PrismaClientKnownRequestError
+        && error.code === 'P2025'
       ) {
         const exists = await prisma.enquiry.findUnique({
           where: { id },
@@ -44,24 +61,6 @@ class EnquiryService {
       }
       throw error;
     }
-  }
-
-  private async list(
-    where: Prisma.EnquiryWhereInput,
-    { page, limit }: Pagination,
-    orderBy: Prisma.EnquiryOrderByWithRelationInput
-  ) {
-    const [items, total] = await Promise.all([
-      prisma.enquiry.findMany({
-        where,
-        /* id as a tie-breaker, rows created together share a timestamp */
-        orderBy: [orderBy, { id: 'asc' }],
-        skip: (page - 1) * limit,
-        take: limit
-      }),
-      prisma.enquiry.count({ where })
-    ]);
-    return { items, total };
   }
 }
 
