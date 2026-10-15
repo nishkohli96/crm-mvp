@@ -1,5 +1,5 @@
-import { apiRequest, ApiError, FASTOR_BASE } from './client';
-import { parseLogin, parseRestaurants, toFastorPhone } from './fastor';
+import { apiRequest, ApiError, REMOTE_BASE } from './client';
+import { parseLogin, parseRestaurants, toRemotePhone } from './remote';
 import {
   findFoodItem,
   sampleLogin,
@@ -21,8 +21,8 @@ import type {
 export const sendOtp = ({ phone, dialCode }: SendOtpBody) =>
   apiRequest<SendOtpResponse>('/pwa/user/register', () => sampleSendOtp, {
     method: 'POST',
-    base: FASTOR_BASE,
-    body: toFastorPhone(phone, dialCode),
+    base: REMOTE_BASE,
+    body: toRemotePhone(phone, dialCode),
     /* only whether it worked matters, the screen uses the default resend timer */
     parse: () => sampleSendOtp
   });
@@ -31,14 +31,14 @@ export const sendOtp = ({ phone, dialCode }: SendOtpBody) =>
 export const verifyOtp = ({ phone, dialCode, otp }: VerifyOtpBody) =>
   apiRequest<LoginResponse>('/pwa/user/login', () => sampleLogin(phone), {
     method: 'POST',
-    base: FASTOR_BASE,
-    body: { ...toFastorPhone(phone, dialCode), otp },
+    base: REMOTE_BASE,
+    body: { ...toRemotePhone(phone, dialCode), otp },
     parse: payload => parseLogin(payload, phone)
   });
 
 export const getRestaurants = () =>
   apiRequest<RestaurantsResponse>('/m/restaurant?city_id=118&&', () => sampleRestaurants, {
-    base: FASTOR_BASE,
+    base: REMOTE_BASE,
     parse: parseRestaurants
   });
 

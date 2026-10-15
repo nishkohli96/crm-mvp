@@ -2,16 +2,19 @@ import path from 'node:path';
 import type { NextConfig } from 'next';
 
 /* Configure Next.js app */
-/* Fastor staging API, set API_BASE_URL in .env.local (see .env_sample) */
-const API_BASE_URL = process.env.API_BASE_URL ?? 'https://staging.fastor.ai/v1';
+/**
+ * Remote API, set API_BASE_URL in .env.local (see .env_sample). When it is unset
+ * nothing listens on the placeholder, the calls fail and the sample data is used.
+ */
+const API_BASE_URL = process.env.API_BASE_URL ?? 'http://127.0.0.1:1';
 
 const nextConfig: NextConfig = {
   /**
-   * The browser calls /fastor/* on this app and Next forwards it to the API,
+   * The browser calls /remote/* on this app and Next forwards it to the API,
    * so the API does not need to allow CORS for this origin.
    */
   async rewrites() {
-    return [{ source: '/fastor/:path*', destination: `${API_BASE_URL}/:path*` }];
+    return [{ source: '/remote/:path*', destination: `${API_BASE_URL}/:path*` }];
   },
   /* Don't advertise the framework in an `X-Powered-By` response header. */
   poweredByHeader: false,

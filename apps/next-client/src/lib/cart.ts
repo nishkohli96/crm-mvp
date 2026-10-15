@@ -1,4 +1,4 @@
-const STORAGE_KEY = 'fastor.cart';
+const STORAGE_KEY = 'app.cart';
 
 export type CartLine = {
   foodItemId: string;

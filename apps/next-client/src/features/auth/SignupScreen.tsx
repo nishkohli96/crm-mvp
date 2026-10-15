@@ -45,7 +45,7 @@ export function SignupScreen() {
     <Screen className="px-6 pb-8 pt-6">
       <BackButton className="-ml-2 self-start" />
       <form onSubmit={handleSubmit} noValidate className="mt-6 flex flex-1 flex-col">
-        <h1 className="text-2xl font-extrabold text-ink">Sign Up to Fastor</h1>
+        <h1 className="text-2xl font-extrabold text-ink">Sign Up to Foodie</h1>
         <p className="mt-2 text-sm text-muted">
           Let us know your mobile number and we will send you an OTP for verification.
         </p>

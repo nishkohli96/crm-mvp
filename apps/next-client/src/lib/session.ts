@@ -6,7 +6,7 @@ import type { User } from '@/lib/api/types';
 
 export type Session = { token: string; user: User };
 
-const STORAGE_KEY = 'fastor.session';
+const STORAGE_KEY = 'app.session';
 const listeners = new Set<() => void>();
 
 function readStorage() {

@@ -8,7 +8,7 @@ const mulish = Mulish({
   subsets: ['latin'],
 });
 
-const defaultTitle = 'Fastor';
+const defaultTitle = 'Foodie';
 
 export const metadata: Metadata = {
   title: {

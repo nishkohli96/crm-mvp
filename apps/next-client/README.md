@@ -8,9 +8,9 @@ This is a [Next.js](https://nextjs.org) **v16** project bootstrapped with [`crea
 - [Tailwind CSS](https://tailwindcss.com/) **v4**
 - Containerize the application using Docker
 
-## Fastor food ordering screens
+## Food ordering screens
 
-Mobile-first ordering flow built with Base UI and Tailwind, using the Fastor staging API, with sample data as a fallback.
+Mobile-first ordering flow built with Base UI and Tailwind, using a remote API, with sample data as a fallback.
 
 | Route | Screen |
 | --- | --- |
@@ -36,13 +36,13 @@ All in `src/components/ui/`, each wraps a Base UI part and is used by more than 
 
 ### The API
 
-The sign-up, login and restaurant calls go to the Fastor staging API. Set its base URL in `.env.local` (copy `.env_sample`):
+The sign-up, login and restaurant calls go to a remote API. Set its base URL in `.env.local` (copy `.env_sample`):
 
 ```
-API_BASE_URL=https://staging.fastor.ai/v1
+API_BASE_URL=<base url of the API>
 ```
 
-The browser calls `/fastor/*` on this app and `next.config.ts` forwards it to `API_BASE_URL`, so the API does not have to allow CORS. Restart the dev server after changing the variable.
+The browser calls `/remote/*` on this app and `next.config.ts` forwards it to `API_BASE_URL`, so the API does not have to allow CORS. Restart the dev server after changing the variable. Without it every call fails and the sample data is used.
 
 | Screen | Call |
 | --- | --- |
@@ -52,9 +52,9 @@ The browser calls `/fastor/*` on this app and `next.config.ts` forwards it to `A
 | Home, Popular Items | `GET /api/orders`, a mock route of this app |
 | Dish details | `GET /api/food-items/:id`, a mock route of this app |
 
-The Fastor API has no orders or dish endpoints, so those two use the mock routes in `src/app/api/`, which serve `src/lib/api/sample-data.ts`. Real restaurants are each paired with a sample dish so the tile still opens a dish page, and the offers and location are sample data.
+The remote API has no orders or dish endpoints, so those two use the mock routes in `src/app/api/`, which serve `src/lib/api/sample-data.ts`. Real restaurants are each paired with a sample dish so the tile still opens a dish page, and the offers and location are sample data.
 
-**The response shapes of the Fastor API are a guess.** It answered 502 when this was written, so `src/lib/api/fastor.ts` accepts the common field names (`token`, `restaurant_name`, `images[0].url`, ...) and treats anything it cannot read as a failure. Once the API is up, check the mappers in that file against the real responses.
+**The response shapes of the remote API are a guess.** It answered 502 when this was written, so `src/lib/api/remote.ts` accepts the common field names (`token`, `restaurant_name`, `images[0].url`, ...) and treats anything it cannot read as a failure. Once the API is up, check the mappers in that file against the real responses.
 
 **Fallback.** If a call cannot be reached, times out (8 s), answers with a 5xx such as a 502, or returns something the mappers cannot read, `src/lib/api/client.ts` uses the sample data for that call instead. Signup then accepts any 6-digit code, and the home screen shows a notice that sample data is in use. 4xx answers are real answers and are shown as errors, eg. a rejected code.
 

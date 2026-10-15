@@ -1,6 +1,6 @@
 /**
- * Request bodies and response mappers for the Fastor API
- * (https://staging.fastor.ai/v1). The responses were not available when
+ * Request bodies and response mappers for the remote API (API_BASE_URL).
+ * The responses were not available when
  * this was written (the API answered 502), so the mappers accept the common
  * field names and throw when nothing usable is found. apiRequest then uses
  * the sample data, and the screens keep working.
@@ -25,7 +25,7 @@ function pick(body: unknown, key: string): unknown {
   return body[key] ?? (isObject(body.data) ? body.data[key] : undefined);
 }
 
-export const toFastorPhone = (phone: string, dialCode: string) => ({ phone, dial_code: dialCode });
+export const toRemotePhone = (phone: string, dialCode: string) => ({ phone, dial_code: dialCode });
 
 export function parseLogin(payload: unknown, phone: string): LoginResponse {
   const token = text(pick(payload, 'token')) ?? text(pick(payload, 'access_token'));
@@ -55,7 +55,7 @@ function cuisineOf(item: Json): string {
 }
 
 /**
- * The restaurant list is the only thing the Fastor API gives us. Tiles open a
+ * The restaurant list is the only thing the remote API gives us. Tiles open a
  * dish page, so each restaurant is paired with a sample dish (the API has no
  * dish details endpoint). Offers and the location stay sample data too.
  */

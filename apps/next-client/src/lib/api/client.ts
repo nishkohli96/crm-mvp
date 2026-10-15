@@ -1,6 +1,6 @@
-/** Fastor API, proxied by the rewrite in next.config.ts. Its host comes from API_BASE_URL. */
-export const FASTOR_BASE = '/fastor';
-/** Mock routes of this app (src/app/api): the Fastor API has no orders or dish details endpoints. */
+/** The remote API, proxied by the rewrite in next.config.ts. Its host comes from API_BASE_URL. */
+export const REMOTE_BASE = '/remote';
+/** Mock routes of this app (src/app/api): the remote API has no orders or dish details endpoints. */
 export const LOCAL_BASE = '/api';
 const TIMEOUT_MS = 8000;
 
