@@ -43,6 +43,8 @@ next-env.d.ts
 !.vscode/launch.json
 !.vscode/extensions.json
 
+# AI Agents
+.claude
 # graft's local graph cache — regenerable, not committed (run `graft build`).
 graft
 

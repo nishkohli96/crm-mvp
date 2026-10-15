@@ -22,7 +22,7 @@ class EmployeeService {
           password: await bcrypt.hash(password, BCRYPT_ROUNDS)
         }
       });
-      return { employee, token: signToken(employee.id) };
+      return employee;
     } catch (error) {
       /**
        * P2002 is Prisma’s error code for “unique constraint failed”.
@@ -42,6 +42,11 @@ class EmployeeService {
   async login({ email, password }: LoginBody) {
     const found = await prisma.employee.findUnique({
       where: { email },
+      /**
+       * The password field is globally omitted in the Prisma schema
+       * to prevent it from being returned in any queries.
+       * Path: apps/express-server/src/db/prisma.ts
+       */
       omit: { password: false }
     });
 

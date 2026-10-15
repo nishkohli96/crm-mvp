@@ -30,8 +30,14 @@ class EnquiryService {
       });
     } catch (error) {
       /* P2025: nothing matched. Either there is no such lead or it was already claimed */
-      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
-        const exists = await prisma.enquiry.findUnique({ where: { id }, select: { id: true } });
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        const exists = await prisma.enquiry.findUnique({
+          where: { id },
+          select: { id: true },
+        });
         throw exists
           ? new HttpError(409, 'Enquiry is already claimed')
           : new HttpError(404, 'Enquiry not found');
