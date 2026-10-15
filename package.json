@@ -8,7 +8,7 @@
   },
   "scripts": {
     "common": "pnpm --filter common run build",
-    "express": "pnpm run common && pnpm --filter express-server run dev",
+    "api": "pnpm run common && pnpm --filter crm-mvp-api run dev",
     "next": "pnpm run common && pnpm --filter next-client run dev",
     "build": "turbo run build",
     "lint": "turbo run lint",

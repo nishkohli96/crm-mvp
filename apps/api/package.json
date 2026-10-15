@@ -1,5 +1,5 @@
 {
-  "name": "express-server",
+  "name": "crm-mvp-api",
   "version": "1.0.0",
   "description": "Express v5 app with typescript",
   "author": "Nishant Kohli",

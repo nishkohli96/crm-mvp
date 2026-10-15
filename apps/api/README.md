@@ -1,4 +1,4 @@
-# CRM API (express-server)
+# CRM API
 
 REST API for a mini-CRM where counselors claim leads. Express 5, TypeScript, Prisma 7 with PostgreSQL, JWT auth, zod validation.
 
@@ -9,8 +9,8 @@ Run these from the repo root (the workspace is managed with pnpm, see the root R
 ```bash
 pnpm install
 
-pnpm --filter express-server db:deploy                       # create the tables
-pnpm --filter express-server db:seed                         # optional: load the sample employees and enquiries
+pnpm --filter crm-mvp-api db:deploy                       # create the tables
+pnpm --filter crm-mvp-api db:seed                         # optional: load the sample employees and enquiries
 pnpm express                                                 # http://localhost:8000
 ```
 
@@ -33,7 +33,7 @@ The server refuses to start when `DATABASE_URL` or `JWT_SECRET` is missing, or w
 
 ### Scripts
 
-Run with `pnpm --filter express-server <script>`.
+Run with `pnpm --filter crm-mvp-api <script>`.
 
 | Script | Purpose |
 | --- | --- |
@@ -59,7 +59,7 @@ Only when the database itself changes: models, fields, indexes, relations, `@map
 2. Against a local development database, run:
 
    ```bash
-   pnpm --filter express-server db:migrate --name add_phone_to_enquiry
+   pnpm --filter crm-mvp-api db:migrate --name add_phone_to_enquiry
    ```
 
    This writes `prisma/migrations/<timestamp>_add_phone_to_enquiry/migration.sql`, **applies it to the database in `DATABASE_URL`** and regenerates the client.
@@ -67,7 +67,7 @@ Only when the database itself changes: models, fields, indexes, relations, `@map
 4. Apply it to every other database (staging, production, CI, a teammate's machine):
 
    ```bash
-   pnpm --filter express-server db:deploy
+   pnpm --filter crm-mvp-api db:deploy
    ```
 
    `db:deploy` only runs committed migrations that the database has not seen yet. It never creates files, asks questions or resets data.
@@ -85,9 +85,9 @@ Only when the database itself changes: models, fields, indexes, relations, `@map
 Prisma's generated SQL can destroy data: renaming a column becomes a drop plus an add, and a new `NOT NULL` column fails when the table already has rows. To edit the SQL before it runs:
 
 ```bash
-pnpm --filter express-server db:migrate --name <name> --create-only   # writes the file, does not apply it
+pnpm --filter crm-mvp-api db:migrate --name <name> --create-only   # writes the file, does not apply it
 # edit prisma/migrations/<timestamp>_<name>/migration.sql
-pnpm --filter express-server db:migrate                               # applies it
+pnpm --filter crm-mvp-api db:migrate                               # applies it
 ```
 
 `prisma/migrations/*_split_employee_name` is an example: it adds the new columns as nullable, copies the data over, then sets `NOT NULL` and drops the old column.
@@ -99,22 +99,22 @@ Prisma Migrate has no `down` command, migrations only move forward. What to do d
 | Situation | What to do |
 | --- | --- |
 | Created (e.g. with `--create-only`) but not applied anywhere | Delete its folder in `prisma/migrations/`. |
-| Applied only to your local dev database, not shared | Reset the local database, then delete the folder, fix the schema and run `db:migrate` again. `pnpm --filter express-server exec prisma migrate reset` drops the database, re-applies every migration and runs the seed. **All local data is lost, never run it against a shared or production database.** |
+| Applied only to your local dev database, not shared | Reset the local database, then delete the folder, fix the schema and run `db:migrate` again. `pnpm --filter crm-mvp-api exec prisma migrate reset` drops the database, re-applies every migration and runs the seed. **All local data is lost, never run it against a shared or production database.** |
 | Applied successfully to a shared or online database | Roll forward. Put `prisma/schema/` back to how it was before the change, run `db:migrate --name revert_<what_it_did>` to generate a new migration that undoes it, commit it and `db:deploy` it. Do not delete the original migration. |
-| Failed halfway on a database | Prisma refuses to apply any further migration there until you resolve it. Undo what the migration did by hand (or finish it by hand), then tell Prisma: `pnpm --filter express-server exec prisma migrate resolve --rolled-back <migration_folder_name>` (or `--applied <migration_folder_name>` if you completed it manually). Fix the migration or schema and run `db:deploy` again. |
+| Failed halfway on a database | Prisma refuses to apply any further migration there until you resolve it. Undo what the migration did by hand (or finish it by hand), then tell Prisma: `pnpm --filter crm-mvp-api exec prisma migrate resolve --rolled-back <migration_folder_name>` (or `--applied <migration_folder_name>` if you completed it manually). Fix the migration or schema and run `db:deploy` again. |
 
 A rollback only reverts the database structure. Data lost by the migration, such as a dropped column, does not come back, so take a backup before running a destructive migration on a database that matters.
 
 **Optional: prepare a down script.** To be able to undo a migration quickly if it fails in production, generate the reverse SQL after editing the schema and before running `db:migrate`. The command compares your edited schema with the database in `DATABASE_URL`, so run it while that database is still at the previous state:
 
 ```bash
-pnpm --filter express-server exec prisma migrate diff \
+pnpm --filter crm-mvp-api exec prisma migrate diff \
   --from-schema prisma/schema --to-config-datasource --script > down.sql
-pnpm --filter express-server db:migrate --name <name>
+pnpm --filter crm-mvp-api db:migrate --name <name>
 mv down.sql prisma/migrations/<timestamp>_<name>/down.sql
 ```
 
-If the migration then fails on a database, run `pnpm --filter express-server exec prisma db execute --file prisma/migrations/<timestamp>_<name>/down.sql` followed by the `migrate resolve --rolled-back` command above. Custom SQL you added by hand to a migration is not reversed by this, write the inverse into `down.sql` yourself. More in Prisma's guides on [generating down migrations](https://www.prisma.io/docs/orm/v7/prisma-migrate/workflows/generating-down-migrations) and [troubleshooting](https://www.prisma.io/docs/orm/v7/prisma-migrate/workflows/troubleshooting).
+If the migration then fails on a database, run `pnpm --filter crm-mvp-api exec prisma db execute --file prisma/migrations/<timestamp>_<name>/down.sql` followed by the `migrate resolve --rolled-back` command above. Custom SQL you added by hand to a migration is not reversed by this, write the inverse into `down.sql` yourself. More in Prisma's guides on [generating down migrations](https://www.prisma.io/docs/orm/v7/prisma-migrate/workflows/generating-down-migrations) and [troubleshooting](https://www.prisma.io/docs/orm/v7/prisma-migrate/workflows/troubleshooting).
 
 ### Rules
 
@@ -122,7 +122,7 @@ If the migration then fails on a database, run `pnpm --filter express-server exe
 - Check that a database matches the schema (exit code 0 means no difference):
 
   ```bash
-  pnpm --filter express-server exec prisma migrate diff --from-config-datasource --to-schema prisma/schema --exit-code
+  pnpm --filter crm-mvp-api exec prisma migrate diff --from-config-datasource --to-schema prisma/schema --exit-code
   ```
 
 ## Sample data
@@ -195,7 +195,7 @@ curl -s $BASE/enquiries/private -H "Authorization: Bearer $TOKEN"
 
 ## Tests
 
-`pnpm --filter express-server test` starts the app on a random port and runs the flows above against the database in `DATABASE_URL`, including two concurrent claims of the same lead (one 200, one 409). Use a development database. The rows it creates are tagged and deleted at the end.
+`pnpm --filter crm-mvp-api test` starts the app on a random port and runs the flows above against the database in `DATABASE_URL`, including two concurrent claims of the same lead (one 200, one 409). Use a development database. The rows it creates are tagged and deleted at the end.
 
 ## Project structure
 

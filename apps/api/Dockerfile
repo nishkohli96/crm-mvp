@@ -16,21 +16,21 @@ ENV pnpm_config_node_linker=isolated
 
 WORKDIR /app
 
-# Only the workspace manifests + the package.json of express-server and of the
+# Only the workspace manifests + the package.json of api and of the
 # workspace package it depends on are needed to install its dependencies; the
 # root pnpm-lock.yaml covers all apps.
 FROM base AS builder
 
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 COPY packages/common/package.json packages/common/
-COPY apps/express-server/package.json apps/express-server/
+COPY apps/api/package.json apps/api/
 RUN pnpm install --frozen-lockfile
 
 # The `...` suffix builds the dependencies of the app (common -> dist/) before the app.
 # A path selector needs the braces, `./apps/x...` silently skips the dependencies.
 COPY packages/common packages/common
-COPY apps/express-server apps/express-server
-RUN pnpm --filter "{./apps/express-server}..." build
+COPY apps/api apps/api
+RUN pnpm --filter "{./apps/api}..." build
 
 FROM base AS runner
 
@@ -40,15 +40,15 @@ ENV NODE_ENV=production
 # link, its built dist/ is copied in below.
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 COPY packages/common/package.json packages/common/
-COPY apps/express-server/package.json apps/express-server/
+COPY apps/api/package.json apps/api/
 RUN pnpm install --frozen-lockfile --prod --ignore-scripts
 
 COPY --from=builder /app/packages/common/dist packages/common/dist
 
-WORKDIR /app/apps/express-server
+WORKDIR /app/apps/api
 
-COPY --from=builder /app/apps/express-server/dist ./dist
-COPY apps/express-server/ecosystem.config.cjs ./
+COPY --from=builder /app/apps/api/dist ./dist
+COPY apps/api/ecosystem.config.cjs ./
 
 # winston writes to ./logs, which the non-root user must be able to create
 RUN mkdir logs && chown node:node logs
