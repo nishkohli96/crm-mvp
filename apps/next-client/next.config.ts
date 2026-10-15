@@ -12,6 +12,11 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'img.icons8.com'
+      },
+      /* Dummy food photos used by the sample data */
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com'
       }
     ]
   },

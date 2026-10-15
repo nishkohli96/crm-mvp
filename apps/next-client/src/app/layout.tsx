@@ -1,26 +1,25 @@
 import { type ReactNode } from 'react';
-import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import type { Metadata, Viewport } from 'next';
+import { Mulish } from 'next/font/google';
 import './globals.css';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+const mulish = Mulish({
+  variable: '--font-mulish',
   subsets: ['latin'],
 });
 
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
-
-const defaultTitle = 'NextJs App';
+const defaultTitle = 'Fastor';
 
 export const metadata: Metadata = {
   title: {
     template: `%s | ${defaultTitle}`,
     default: defaultTitle,
   },
-  description: 'NextJS Template App'
+  description: 'Order food from restaurants near you'
+};
+
+export const viewport: Viewport = {
+  themeColor: '#e8601f'
 };
 
 export default function RootLayout({
@@ -30,9 +29,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${mulish.variable} antialiased`}>
         {children}
       </body>
     </html>
