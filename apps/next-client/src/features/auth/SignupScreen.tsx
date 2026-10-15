@@ -6,7 +6,6 @@ import { ApiError } from '@/lib/api/client';
 import { sendOtp } from '@/lib/api/endpoints';
 import { isValidPhone } from '@/lib/format';
 import { useRedirectIfSignedIn } from '@/lib/session';
-import { BackButton } from '@/components/ui/BackButton';
 import { Button } from '@/components/ui/Button';
 import { Screen } from '@/components/ui/Screen';
 import { TextField } from '@/components/ui/TextField';
@@ -43,8 +42,11 @@ export function SignupScreen() {
 
   return (
     <Screen className="px-6 pb-8 pt-6">
-      <BackButton className="-ml-2 self-start" />
-      <form onSubmit={handleSubmit} noValidate className="mt-6 flex flex-1 flex-col">
+      <form
+        onSubmit={handleSubmit}
+        noValidate
+        className="mt-6 flex flex-1 flex-col"
+      >
         <h1 className="text-2xl font-extrabold text-ink">Sign Up to Foodie</h1>
         <p className="mt-2 text-sm text-muted">
           Let us know your mobile number and we will send you an OTP for verification.

@@ -6,7 +6,7 @@ import { ApiError } from '@/lib/api/client';
 import { sendOtp, verifyOtp } from '@/lib/api/endpoints';
 import { MOCK_OTP } from '@/lib/api/sample-data';
 import { formatCountdown, formatPhone } from '@/lib/format';
-import { useCountdown } from '@/lib/hooks';
+import useCountdown from '@/hooks/useCountdown';
 import { saveSession, useRedirectIfSignedIn } from '@/lib/session';
 import { BackButton } from '@/components/ui/BackButton';
 import { Button } from '@/components/ui/Button';
@@ -97,23 +97,23 @@ export function VerifyScreen({ phone }: { phone: string }) {
         </div>
 
         <p className="mt-2 text-sm text-ink">
+          I didn&apos;t receive a code
+          {' '}
           {remaining > 0
             ? (
-              <>
-                I didn&apos;t receive a code
-                {' '}
-                <span className="font-bold text-brand-ink tabular-nums">
-                  (
-                  {formatCountdown(remaining)}
-                  )
-                </span>
-              </>
+              <span className="font-bold text-brand-ink tabular-nums">
+                (
+                {formatCountdown(remaining)}
+                )
+              </span>
             )
             : (
               <>
-                I didn&apos;t receive a code
-                {' '}
-                <button type="button" onClick={resend} className="font-bold text-brand-ink underline underline-offset-2">
+                <button
+                  type="button"
+                  onClick={resend}
+                  className="font-bold text-brand-ink underline underline-offset-2"
+                >
                   Resend code
                 </button>
               </>

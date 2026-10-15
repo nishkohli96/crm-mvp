@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/Button';
 import { PhoneIcon, WalletIcon } from '@/components/icons';
 import { Screen } from '@/components/ui/Screen';
 import { getOrders, getRestaurants } from '@/lib/api/endpoints';
-import { useApiData } from '@/lib/hooks';
+import useApiData from '@/hooks/useApiData';
 import { useRequireSession } from '@/lib/session';
 import { BestSellerTile } from './BestSellerTile';
 import { OrderCard } from './OrderCard';
