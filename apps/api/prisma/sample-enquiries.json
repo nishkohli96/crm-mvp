@@ -1,0 +1,78 @@
+[
+  {
+    "name": "Aarav Sharma",
+    "email": "aarav.sharma@example.com",
+    "phone": "+91 98765 43210",
+    "courseInterest": "Full Stack Web Development",
+    "message": "I am a final-year student. Is there a weekend batch available?"
+  },
+  {
+    "name": "Priya Nair",
+    "email": "priya.nair@example.com",
+    "phone": "+91 91234 56780",
+    "courseInterest": "Data Science",
+    "message": "Looking to switch careers from accounting. Do you cover Python from scratch?"
+  },
+  {
+    "name": "Rohan Mehta",
+    "email": "rohan.mehta@example.com",
+    "courseInterest": "UI/UX Design"
+  },
+  {
+    "name": "Ananya Iyer",
+    "email": "ananya.iyer@example.com",
+    "phone": "+91 99887 76655",
+    "courseInterest": "Digital Marketing",
+    "message": "Can I get the fee structure and the placement record?"
+  },
+  {
+    "name": "Vikram Singh",
+    "email": "vikram.singh@example.com",
+    "phone": "+91 90000 11122",
+    "courseInterest": "Cloud Computing (AWS)"
+  },
+  {
+    "name": "Sneha Kulkarni",
+    "email": "sneha.kulkarni@example.com",
+    "courseInterest": "Data Science",
+    "message": "Is the course available online? I live outside Pune."
+  },
+  {
+    "name": "Arjun Reddy",
+    "email": "arjun.reddy@example.com",
+    "phone": "+91 98450 22334",
+    "courseInterest": "Cyber Security",
+    "message": "I have 2 years of experience in networking. Is there an advanced track?"
+  },
+  {
+    "name": "Meera Joshi",
+    "email": "meera.joshi@example.com",
+    "phone": "+91 97654 32100",
+    "courseInterest": "Full Stack Web Development"
+  },
+  {
+    "name": "Karan Malhotra",
+    "email": "karan.malhotra@example.com",
+    "courseInterest": "Product Management",
+    "message": "Please share the syllabus and the upcoming batch dates."
+  },
+  {
+    "name": "Divya Pillai",
+    "email": "divya.pillai@example.com",
+    "phone": "+91 94470 88990",
+    "courseInterest": "UI/UX Design",
+    "message": "Do you offer any scholarship for women in tech?"
+  },
+  {
+    "name": "Rahul Verma",
+    "email": "rahul.verma@example.com",
+    "phone": "+91 98100 55667",
+    "courseInterest": "Cloud Computing (AWS)",
+    "message": "My company may sponsor this. Can you send an invoice quote?"
+  },
+  {
+    "name": "Ishita Bansal",
+    "email": "ishita.bansal@example.com",
+    "courseInterest": "Digital Marketing"
+  }
+]

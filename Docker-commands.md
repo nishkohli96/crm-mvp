@@ -2,10 +2,10 @@
 
 Every image is built from the **monorepo root**, as its Dockerfile copies the root `pnpm-lock.yaml` and `pnpm-workspace.yaml`. Run `pnpm install` once beforehand, so the lockfile is up to date (the images install with `--frozen-lockfile`).
 
-| App              | Dockerfile                          | Container port | Port in `compose.yml` |
-| ---------------- | ----------------------------------- | -------------- | --------------------- |
-| `express-server` | `./apps/express-server/Dockerfile`  | 8000           | 8000                  |
-| `next-client`    | `./apps/next-client/Dockerfile`     | 3000           | 3000                  |
+| App | Dockerfile | Container port | Port in `compose.yml`|
+| - | - | - | - |
+| `api` | `./apps/api/Dockerfile`| 8000 | 8000 |
+| `next-client` | `./apps/next-client/Dockerfile` | 3000 | 3000 |
 
 1. Build an image, eg. `next-client`
 
@@ -22,7 +22,7 @@ docker run -p 3000:3000 docker_username/next-client
 Pass environment variables with `-e` or `--env-file`. The `.env` files are excluded from the build context by `.dockerignore`, so they are never baked into an image.
 
 ```bash
-docker run -p 8000:8000 --env-file ./apps/express-server/.env docker_username/express-server
+docker run -p 8000:8000 --env-file ./apps/api/.env docker_username/crm-mvp-api
 ```
 
 3. Start all services

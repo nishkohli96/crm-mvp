@@ -4,7 +4,10 @@ packages:
 nodeLinker: hoisted
 allowBuilds:
   '@parcel/watcher': false
+  '@prisma/engines': true
   '@swc/core': true
+  esbuild: true
+  prisma: true
   unrs-resolver: true
 overrides:
   '@types/node': ^24

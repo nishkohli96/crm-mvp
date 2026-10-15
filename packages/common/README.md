@@ -1,6 +1,6 @@
 # common
 
-Types, enums and helpers shared between `express-server` and `next-client`, linked into both as `"common": "workspace:*"`.
+Types, enums and helpers shared between `api` and `next-client`, linked into both as `"common": "workspace:*"`.
 
 ```ts
 import { UserRole, isAdmin, type UserDetails } from 'common';

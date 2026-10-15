@@ -73,4 +73,18 @@ pnpm install --frozen-lockfile
 
 pnpm --filter "$PKG_NAME" run build
 
+# Create the env files from the samples, but never overwrite one that already
+# holds a developer's own values (database URL, JWT secret, ...).
+copy_env() {
+  if [ -f "$2" ]; then
+    echo "Retain existing $2"
+  else
+    cp "$1" "$2"
+    echo "Created $2 from $1, fill in its values"
+  fi
+}
+
+copy_env apps/api/.env_sample apps/api/.env
+copy_env apps/next-client/.env_sample apps/next-client/.env.local
+
 echo "✅ Setup Complete! 🎉🎉🎉"

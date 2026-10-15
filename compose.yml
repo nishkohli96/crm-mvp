@@ -1,9 +1,9 @@
 services:
-  express-server:
-    image: docker_username/express-server
+  crm-mvp-api:
+    image: docker_username/crm-mvp-api
     build:
       context: .
-      dockerfile: ./apps/express-server/Dockerfile
+      dockerfile: ./apps/api/Dockerfile
     ports:
       - '8000:8000'
 

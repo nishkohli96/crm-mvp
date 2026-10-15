@@ -1,0 +1,23 @@
+/// No public/private flag: `claimedBy IS NULL` means public, set means private to that employee.
+model Enquiry {
+  id             String   @id @default(uuid())
+  name           String
+  email          String
+  phone          String?
+  message        String?
+  courseInterest String   @map("course_interest")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  /// EmployeeId of the employee who claimed this enquiry, or NULL if unclaimed (public)
+  claimedBy String?   @map("claimed_by")
+  claimedAt DateTime? @map("claimed_at")
+
+  // Tells Prisma that claimedBy is a foreign key to Employee.id, and
+  // lets you work with the whole Employee object
+  // No column is created in the database, but you can do things like:
+  claimedByEmployee Employee? @relation(fields: [claimedBy], references: [id])
+
+  @@index([claimedBy])
+  @@map("enquiries")
+}

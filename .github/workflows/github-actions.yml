@@ -29,12 +29,12 @@ jobs:
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
 
-      # express-server and next-client load the built dist/ of common.
+      # api and next-client load the built dist/ of common.
       - name: Build common
         run: pnpm --filter common build
 
-      - name: Build express-server
-        run: pnpm --filter express-server build
+      - name: Build api
+        run: pnpm --filter crm-mvp-api build
 
       - name: Build next-client
         run: pnpm --filter next-client build
