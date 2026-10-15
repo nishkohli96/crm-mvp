@@ -18,14 +18,10 @@ function readSample(fileName: string): unknown {
 
 /**
  * Loads sample-employees.json. The passwords in that file are for local
- * testing only, so nothing is created when NODE_ENV is production. An
- * employee whose email already exists is skipped, so re-running is safe.
+ * testing only. An employee whose email already exists is skipped, so
+ * re-running is safe.
  */
 async function seedEmployees() {
-  if (ENV_VARS.env === 'production') {
-    console.log('NODE_ENV is production, skipping sample employees');
-    return;
-  }
   /* Same schema as the register endpoint, so the samples stay valid */
   const employees = z.array(registerSchema).parse(readSample('sample-employees.json'));
   const data = await Promise.all(
@@ -54,6 +50,11 @@ async function seedEnquiries() {
 }
 
 async function seed() {
+  /* All of the sample data is fake, none of it belongs in a production database */
+  if (ENV_VARS.env === 'production') {
+    console.log('NODE_ENV is production, skipping all sample data');
+    return;
+  }
   await seedEmployees();
   await seedEnquiries();
 }

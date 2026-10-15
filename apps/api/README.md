@@ -9,9 +9,9 @@ Run these from the repo root (the workspace is managed with pnpm, see the root R
 ```bash
 pnpm install
 
-pnpm --filter crm-mvp-api db:deploy                       # create the tables
-pnpm --filter crm-mvp-api db:seed                         # optional: load the sample employees and enquiries
-pnpm express                                                 # http://localhost:8000
+pnpm --filter crm-mvp-api db:deploy                      # create the tables
+pnpm --filter crm-mvp-api db:seed                        # optional: load the sample employees and enquiries
+pnpm api                                                 # http://localhost:8000
 ```
 
 You need a PostgreSQL database, point `DATABASE_URL` at it.
@@ -134,7 +134,7 @@ If the migration then fails on a database, run `pnpm --filter crm-mvp-api exec p
 | `sample-employees.json` | Two counselors, `asha.rao@example.com` and `vikram.nair@example.com`, both with the password `Password@123` | Employees whose email already exists are skipped |
 | `sample-enquiries.json` | 12 public (unclaimed) enquiries | Skipped when the `enquiries` table already has rows |
 
-The sample employees can log in right away via `POST /api/employees/login`. Their password is for local testing only, so the seed does not create them when `NODE_ENV=production`. Both files are validated with the same schemas the API uses.
+The sample employees can log in right away via `POST /api/employee/login`. Their password is for local testing only, so the seed creates nothing at all, employees or enquiries, when `NODE_ENV=production`. Both files are validated with the same schemas the API uses.
 
 ## Endpoints
 
@@ -142,12 +142,12 @@ Base path `/api`. Protected routes need `Authorization: Bearer <token>`.
 
 | Method | Route | Auth | Purpose | Success |
 | --- | --- | --- | --- | --- |
-| POST | `/employees/register` | no | Create a counselor, returns the employee and a JWT | 201 |
-| POST | `/employees/login` | no | Validate credentials, returns the employee and a JWT | 200 |
-| POST | `/enquiries/public` | no | Public enquiry form, creates a lead | 201 |
-| GET | `/enquiries/public` | yes | Unclaimed leads (`claimedBy IS NULL`) | 200 |
-| PATCH | `/enquiries/:id/claim` | yes | Assign the lead to the logged-in counselor | 200 |
-| GET | `/enquiries/private` | yes | Leads claimed by the logged-in counselor | 200 |
+| POST | `/employee/register` | no | Create a counselor, returns the employee (no token, log in for one) | 201 |
+| POST | `/employee/login` | no | Validate credentials, returns the employee and a JWT | 200 |
+| POST | `/enquiry/create` | no | Public enquiry form, creates a lead | 201 |
+| GET | `/enquiry/list` | yes | Unclaimed leads (`claimedBy IS NULL`) | 200 |
+| PATCH | `/enquiry/claim/:id` | yes | Assign the lead to the logged-in counselor | 200 |
+| GET | `/employee/claimed-enquiries` | yes | Leads claimed by the logged-in counselor | 200 |
 
 Both list routes take `?page=1&limit=10` (limit at most 100) and return `meta: { page, limit, total, totalPages }`.
 
@@ -167,31 +167,31 @@ Errors: `400` validation, `401` missing/invalid/expired token or bad credentials
 ```bash
 BASE=http://localhost:8000/api
 
-# register, then login (both return a token)
-curl -s -X POST $BASE/employees/register -H 'Content-Type: application/json' \
+# register (returns the employee), then login (returns the token)
+curl -s -X POST $BASE/employee/register -H 'Content-Type: application/json' \
   -d '{"firstName":"Asha","lastName":"Rao","email":"asha@example.com","password":"Password@123"}'
-TOKEN=$(curl -s -X POST $BASE/employees/login -H 'Content-Type: application/json' \
+TOKEN=$(curl -s -X POST $BASE/employee/login -H 'Content-Type: application/json' \
   -d '{"email":"asha@example.com","password":"Password@123"}' | jq -r .data.token)
 
 # submit the public form (no token)
-curl -s -X POST $BASE/enquiries/public -H 'Content-Type: application/json' \
+curl -s -X POST $BASE/enquiry/create -H 'Content-Type: application/json' \
   -d '{"name":"Aarav Sharma","email":"aarav@example.com","courseInterest":"Data Science","phone":"+91 98765 43210","message":"Weekend batch?"}'
 
 # or submit every record of the sample file through the form
 jq -c '.[]' prisma/sample-enquiries.json | while read -r lead; do
-  curl -s -X POST $BASE/enquiries/public -H 'Content-Type: application/json' -d "$lead" > /dev/null
+  curl -s -X POST $BASE/enquiry/create -H 'Content-Type: application/json' -d "$lead" > /dev/null
 done
 
 # list unclaimed leads, claim one, list mine
-curl -s "$BASE/enquiries/public?page=1&limit=5" -H "Authorization: Bearer $TOKEN"
-ID=$(curl -s "$BASE/enquiries/public?limit=1" -H "Authorization: Bearer $TOKEN" | jq -r '.data[0].id')
-curl -s -X PATCH $BASE/enquiries/$ID/claim -H "Authorization: Bearer $TOKEN"
-curl -s $BASE/enquiries/private -H "Authorization: Bearer $TOKEN"
+curl -s "$BASE/enquiry/list?page=1&limit=5" -H "Authorization: Bearer $TOKEN"
+ID=$(curl -s "$BASE/enquiry/list?limit=1" -H "Authorization: Bearer $TOKEN" | jq -r '.data[0].id')
+curl -s -X PATCH $BASE/enquiry/claim/$ID -H "Authorization: Bearer $TOKEN"
+curl -s $BASE/employee/claimed-enquiries -H "Authorization: Bearer $TOKEN"
 ```
 
 ## How the claim stays atomic
 
-`PATCH /enquiries/:id/claim` is one conditional statement, `UPDATE enquiries SET claimed_by = $1, claimed_at = now() WHERE id = $2 AND claimed_by IS NULL RETURNING *`, written as `prisma.enquiry.update({ where: { id, claimedBy: null }, ... })` in [`src/routes/enquiries/service.ts`](src/routes/enquiries/service.ts). Of two simultaneous claims only one matches a row. When nothing matched, a second lookup tells a missing lead (404) from an already claimed one (409). The private list filters on the id from the JWT only, never on anything the client sends.
+`PATCH /enquiry/claim/:id` is one conditional statement, `UPDATE enquiries SET claimed_by = $1, claimed_at = now() WHERE id = $2 AND claimed_by IS NULL RETURNING *`, written as `prisma.enquiry.update({ where: { id, claimedBy: null }, ... })` in [`src/routes/enquiry/service.ts`](src/routes/enquiry/service.ts). Of two simultaneous claims only one matches a row. When nothing matched, a second lookup tells a missing lead (404) from an already claimed one (409). The private list filters on the id from the JWT only, never on anything the client sends.
 
 ## Tests
 

@@ -8,9 +8,9 @@ declare module 'express-serve-static-core' {
   }
 }
 
-/* Expects "Authorization: Bearer <token>" and sets `req.user` from it. */
+/* Expects "Authorization: Bearer <token>" (any run of spaces between the two) and sets `req.user` from it. */
 export function authenticate(req: Request, _res: Response, next: NextFunction) {
-  const [scheme, token] = req.headers.authorization?.split(' ') ?? [];
+  const [scheme, token] = req.headers.authorization?.trim().split(/\s+/) ?? [];
   if (scheme?.toLowerCase() !== 'bearer' || !token) {
     throw new HttpError(401, 'Missing or malformed Authorization header');
   }
