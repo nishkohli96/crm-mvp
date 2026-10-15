@@ -15,7 +15,7 @@ export type Restaurant = {
   rating: number;
   image: string;
   /** Price badge on the Best Seller tile */
-  startingPrice: number;
+  startingPrice?: number;
   /** Dish opened when the tile is tapped */
   featuredFoodId: string;
 };

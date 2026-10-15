@@ -1,8 +1,7 @@
-/**
- * Where the API lives. Defaults to the mock routes of this app (src/app/api),
- * point it at any other host with NEXT_PUBLIC_API_BASE_URL.
- */
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? '/api';
+/** Fastor API, proxied by the rewrite in next.config.ts. Its host comes from API_BASE_URL. */
+export const FASTOR_BASE = '/fastor';
+/** Mock routes of this app (src/app/api): the Fastor API has no orders or dish details endpoints. */
+export const LOCAL_BASE = '/api';
 const TIMEOUT_MS = 8000;
 
 export type ApiResult<T> = {
@@ -22,7 +21,13 @@ export class ApiError extends Error {
   }
 }
 
-type RequestOptions = { method?: 'GET' | 'POST'; body?: unknown };
+type RequestOptions<T> = {
+  method?: 'GET' | 'POST';
+  body?: unknown;
+  base?: string;
+  /** Turns the raw JSON into `T`. Throw if it does not look right, the fallback is used then. */
+  parse?: (payload: unknown) => T;
+};
 
 /**
  * Calls the API and returns its data. When the API cannot be reached, times
@@ -35,11 +40,11 @@ type RequestOptions = { method?: 'GET' | 'POST'; body?: unknown };
 export async function apiRequest<T>(
   path: string,
   fallback: () => T,
-  { method = 'GET', body }: RequestOptions = {}
+  { method = 'GET', body, base = LOCAL_BASE, parse }: RequestOptions<T> = {}
 ): Promise<ApiResult<T>> {
   let response: Response;
   try {
-    response = await fetch(`${API_BASE_URL}${path}`, {
+    response = await fetch(`${base}${path}`, {
       method,
       headers: body ? { 'Content-Type': 'application/json' } : undefined,
       body: body ? JSON.stringify(body) : undefined,
@@ -58,9 +63,13 @@ export async function apiRequest<T>(
 
   const payload: unknown = await response.json().catch(() => null);
   if (!response.ok) {
-    const message
-      = (payload as { message?: string } | null)?.message ?? 'Something went wrong';
-    throw new ApiError(response.status, message);
+    const body = (payload ?? {}) as { message?: string; error?: string; msg?: string };
+    throw new ApiError(response.status, body.message ?? body.error ?? body.msg ?? 'Something went wrong');
   }
-  return { data: payload as T, source: 'api' };
+  try {
+    return { data: parse ? parse(payload) : (payload as T), source: 'api' };
+  } catch {
+    console.warn(`[api] ${method} ${path} returned an unexpected response, using sample data`);
+    return { data: fallback(), source: 'fallback' };
+  }
 }

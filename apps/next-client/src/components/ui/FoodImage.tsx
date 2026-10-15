@@ -11,6 +11,17 @@ type FoodImageProps = {
   className?: string;
 };
 
+/* Hosts allowed in next.config.ts. Other hosts (eg. restaurant photos from the API) are shown as they are. */
+const OPTIMIZED_HOSTS = ['images.unsplash.com'];
+
+function isOptimizable(src: string) {
+  try {
+    return OPTIMIZED_HOSTS.includes(new URL(src).hostname);
+  } catch {
+    return false;
+  }
+}
+
 /**
  * Fills its (relatively positioned) parent. If the photo fails to load the
  * parent shows a plain tile instead of a broken image icon.
@@ -32,6 +43,7 @@ export function FoodImage({ src, alt, sizes, priority, className }: FoodImagePro
       fill
       sizes={sizes}
       priority={priority}
+      unoptimized={!isOptimizable(src)}
       onError={() => setFailed(true)}
       className={`object-cover ${className ?? ''}`}
     />

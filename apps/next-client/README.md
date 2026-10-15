@@ -10,7 +10,7 @@ This is a [Next.js](https://nextjs.org) **v16** project bootstrapped with [`crea
 
 ## Fastor food ordering screens
 
-Mobile-first ordering flow built with Base UI and Tailwind, running on a dummy API.
+Mobile-first ordering flow built with Base UI and Tailwind, using the Fastor staging API, with sample data as a fallback.
 
 | Route | Screen |
 | --- | --- |
@@ -34,28 +34,31 @@ All in `src/components/ui/`, each wraps a Base UI part and is used by more than 
 | `QuantityStepper` | `NumberField` | The − 3 + control |
 | `PortionPicker` | `RadioGroup`, `Radio` | Portion size list |
 
-### The dummy API
+### The API
 
-The app calls `/api/*`, served by route handlers in `src/app/api/` from the data in `src/lib/api/sample-data.ts`.
+The sign-up, login and restaurant calls go to the Fastor staging API. Set its base URL in `.env.local` (copy `.env_sample`):
 
-| Endpoint | Purpose |
-| --- | --- |
-| `POST /api/auth/register` | Send the OTP to a mobile number |
-| `POST /api/auth/login` | Verify the OTP, returns a token and the user. The mock accepts `123456` only |
-| `GET /api/restaurants` | Location, offers and the restaurant list |
-| `GET /api/orders` | The popular items / orders list |
-| `GET /api/food-items/:id` | Dish details with portion sizes |
-
-**Fallback.** If the API cannot be reached, times out (8 s) or answers with a 5xx such as a 502, `src/lib/api/client.ts` uses the sample data for that call instead. Signup then accepts any 6-digit code, and the home screen shows a notice that sample data is in use. 4xx answers are real answers and are shown as errors: a wrong code on a working API is rejected, an unknown dish shows "We could not find this dish".
-
-| Variable | Effect |
-| --- | --- |
-| `NEXT_PUBLIC_API_BASE_URL` | Call another API instead of `/api`. It has to return the same JSON shapes as `src/lib/api/types.ts` |
-| `MOCK_API_FAIL=502` | Make every mock route answer 502, to try the fallback. Restart the dev server after setting it |
-
-```bash
-MOCK_API_FAIL=502 pnpm dev
 ```
+API_BASE_URL=https://staging.fastor.ai/v1
+```
+
+The browser calls `/fastor/*` on this app and `next.config.ts` forwards it to `API_BASE_URL`, so the API does not have to allow CORS. Restart the dev server after changing the variable.
+
+| Screen | Call |
+| --- | --- |
+| Get OTP | `POST {API_BASE_URL}/pwa/user/register` with `{ phone, dial_code }` |
+| Continue | `POST {API_BASE_URL}/pwa/user/login` with `{ phone, dial_code, otp }` |
+| Home, Best Seller | `GET {API_BASE_URL}/m/restaurant?city_id=118&&` |
+| Home, Popular Items | `GET /api/orders`, a mock route of this app |
+| Dish details | `GET /api/food-items/:id`, a mock route of this app |
+
+The Fastor API has no orders or dish endpoints, so those two use the mock routes in `src/app/api/`, which serve `src/lib/api/sample-data.ts`. Real restaurants are each paired with a sample dish so the tile still opens a dish page, and the offers and location are sample data.
+
+**The response shapes of the Fastor API are a guess.** It answered 502 when this was written, so `src/lib/api/fastor.ts` accepts the common field names (`token`, `restaurant_name`, `images[0].url`, ...) and treats anything it cannot read as a failure. Once the API is up, check the mappers in that file against the real responses.
+
+**Fallback.** If a call cannot be reached, times out (8 s), answers with a 5xx such as a 502, or returns something the mappers cannot read, `src/lib/api/client.ts` uses the sample data for that call instead. Signup then accepts any 6-digit code, and the home screen shows a notice that sample data is in use. 4xx answers are real answers and are shown as errors, eg. a rejected code.
+
+`MOCK_API_FAIL=502 pnpm dev` makes the two local mock routes answer 502 as well.
 
 ## Getting Started
 
